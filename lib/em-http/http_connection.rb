@@ -156,6 +156,16 @@ module EventMachine
       end
     end
 
+    def pause
+      return unless @conn
+      @conn.pause
+    end
+
+    def resume
+      return unless @conn
+      @conn.resume
+    end
+
     def connection_completed
       @peer = @conn.get_peername
 
