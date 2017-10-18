@@ -43,6 +43,7 @@ module EventMachine
     def initialize
       @deferred = true
       @middleware = []
+      @on_data_received = []
     end
 
     def conn=(c)
@@ -152,12 +153,19 @@ module EventMachine
       Socket.unpack_sockaddr_in(@peer)[1] rescue nil
     end
 
+    def on_data_received &block
+      @on_data_received << block
+    end
+
     def receive_data(data)
       begin
         @p << data
       rescue HTTP::Parser::Error => e
         c = @clients.shift
         c.nil? ? unbind(e.message) : c.on_error(e.message)
+      end
+      @on_data_received.each do |block|
+        block.call
       end
     end
 
