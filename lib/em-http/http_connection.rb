@@ -161,6 +161,11 @@ module EventMachine
       @conn.pause
     end
 
+    def paused?
+      return false unless @conn
+      @conn.paused?
+    end
+
     def resume
       return unless @conn
       @conn.resume
