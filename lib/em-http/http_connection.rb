@@ -50,6 +50,11 @@ module EventMachine
       @deferred = false
     end
 
+    def conn
+      raise "Not connected" unless @conn
+      @conn
+    end
+
     def activate_connection(client)
       begin
         EventMachine.bind_connect(@connopts.bind, @connopts.bind_port,
@@ -157,18 +162,15 @@ module EventMachine
     end
 
     def pause
-      return unless @conn
-      @conn.pause
+      conn.pause
     end
 
     def paused?
-      return false unless @conn
-      @conn.paused?
+      conn.paused?
     end
 
     def resume
-      return unless @conn
-      @conn.resume
+      conn.resume
     end
 
     def connection_completed
